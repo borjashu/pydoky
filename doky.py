@@ -1,5 +1,5 @@
 import sys
-import pypandoc #NOPE
+import os
 
 project = ["robob","bobsh","bobhh"]
 projectNumber = 0
@@ -33,6 +33,4 @@ with open('somefile1.md') as infile, open('newfile.md', 'w') as outfile:
             outfile.write(line)
 
 #pandocing
-output = pypandoc.convert_file('newfile.md', 'docx', outputfile="somefile.docx")
-
-
+os.system(f"pandoc -o {chosenOne}.docx newfile.md")
