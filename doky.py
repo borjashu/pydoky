@@ -1,36 +1,37 @@
-import sys
-import os
+from sys import argv
+from os import system
 
-project = ["robob","bobsh","bobhh"]
-projectNumber = 0
+projects = ["robobsh","bobsh","bobhh"]
 
-#display projects
-while projectNumber < len(project):
-    print (projectNumber, project[projectNumber])
-    projectNumber = projectNumber+1
+def help():
+    print("usage:\n\tdoky.py <project>\nAvailable projects:\n")
+    
+    for project in projects:
+        print('\t- ' + project)
 
+def transform():
+    #copy stuff between "tags"
+    chosenOne = argv[1]
+    print("Doing things with the chosenOne: " + chosenOne)
 
-#project choice 
-while projectNumber >= len(project) :
-    projectNumber = int(input("choose your destiny (Enter a number): "))
-    if  projectNumber <= len(project) :
-        chosenOne = project[projectNumber]
-        print (chosenOne)
-    else :
-        print  ("you....LOOSER!")
+    with open('somefile1.md') as infile, open('newfile.md', 'w') as outfile:
+        copy = False
+        for line in infile:
+            if line.strip() ==   f"<{chosenOne}>":
+                copy = True
 
-#copy stuff between "tags"
-with open('somefile1.md') as infile, open('newfile.md', 'w') as outfile:
-    copy = False
-    for line in infile:
-        if line.strip() ==   f"<{chosenOne}>":
-            copy = True
+            elif line.strip() == f"</{chosenOne}>":
+                copy = False
 
-        elif line.strip() == f"</{chosenOne}>":
-            copy = False
+            elif copy:
+                outfile.write(line)
 
-        elif copy:
-            outfile.write(line)
+    #pandocing
+    system(f"pandoc -o {chosenOne}.docx newfile.md")
 
-#pandocing
-os.system(f"pandoc -o {chosenOne}.docx newfile.md")
+if __name__ == "__main__":
+    if len(argv) != 2:
+        help()
+        exit()
+    else:
+        transform()
